@@ -54,12 +54,12 @@ const Product: React.FC = () => {
     fetchData();
   }, []);
   console.log(dataTable);
-  const columns: ColumnsType<DataType> = [
+  const columns: any = [
     {
       title: "Ảnh",
       key:"image",
       dataIndex: "image",
-      render: (dataIndex) => <Image src={dataIndex} />,
+      render: (text:string) => <Image src={text} />,
     },
     {
       title: "Tên sản phẩm",
