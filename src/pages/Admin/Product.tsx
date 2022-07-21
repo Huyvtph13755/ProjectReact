@@ -97,18 +97,18 @@ const Product: React.FC = () => {
       title: "Thao tác",
       key: "action",
       dataIndex: "_id",
-      render: (dataIndex) => (
+      render: (text:string) => (
         <Space size="middle">
-          <Link to={`/admin/product/edit/${dataIndex}`}>
+          <Link to={`/admin/product/edit/${text}`}>
             <EditOutlined />
           </Link>
           <Button
             style={{ border: "none" }}
             onClick={async () => {
-              const { data } = await deleteProduct(dataIndex);
+              const { data } = await deleteProduct(text);
               data &&
                 setDataTable(
-                  dataTable.filter((item) => item._id !== dataIndex)
+                  dataTable.filter((item) => item._id !== text)
                 );
             }}
           >
