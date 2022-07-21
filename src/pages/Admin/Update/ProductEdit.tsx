@@ -13,8 +13,7 @@ import {
   Image,
 } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import UploadImage from "../../../components/Product/UploadImage";
-import { createProduct, read } from "../../../api/product";
+import { createProduct, read, update } from "../../../api/product";
 import { upload } from "../../../api/image";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { getAllCate } from "../../../api/category";
@@ -31,7 +30,7 @@ const ProductEdit = (props: Props) => {
   const [form] = Form.useForm();
   useEffect(() => {
     const getProduct = async () => {
-      const { data } = await read(_id);
+      const { data } = await read(_id as string);
       form.setFieldsValue(data);
       console.log(data);
     };
@@ -51,7 +50,7 @@ const ProductEdit = (props: Props) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      uploadImage(reader.result);
+      uploadImage(reader.result as string);
     };
   };
   const uploadImage = async (base64Image: string) => {
@@ -74,14 +73,14 @@ const ProductEdit = (props: Props) => {
       category: values.category,
     };
     if (values.image2) {
-      product.image = uploadedImage
+      product.image = uploadedImage;
     }
     console.log(product);
 
     try {
-      // const data = await createProduct(values);
-      message.success("Tạo mới thành công");
-      // navigate("/admin/product");
+      const data = await update(product);
+      message.success("Sửa thành công");
+      navigate("/admin");
     } catch (err) {
       message.error("Có lỗi xảy ra");
     }
@@ -95,7 +94,7 @@ const ProductEdit = (props: Props) => {
     <>
       <Breadcrumb>
         <Typography.Title level={2} style={{ margin: 0 }}>
-          Thêm mới
+          Sửa
         </Typography.Title>
       </Breadcrumb>
       <Form
@@ -112,24 +111,24 @@ const ProductEdit = (props: Props) => {
               <Form.Item name="image2">
                 <UploadWrapper>
                   {uploadedImage ? (
-                    <ImagePreview
-                      style={{}}
-                      name="image2"
-                      src={uploadedImage}
-                      alt="Image"
-                    />
+                    <ImagePreview style={{}} src={uploadedImage} alt="Image" />
                   ) : (
-                    <UploadIcon2>
-                      <PlusCircleOutlined style={{ fontSize: 30 }} />
-                      <input
-                        style={{ display: "none" }}
-                        type="file"
-                        accept="image/png, image/jpg, image/jpeg, image/gif"
-                        onChange={handleChangeImage}
-                      />
-                      <br />
-                      Thêm ảnh
-                    </UploadIcon2>
+                    <>
+                      <Form.Item name="image" valuePropName="src">
+                        <ImagePreview style={{ width: "500px" }} />
+                      </Form.Item>
+                      <UploadIcon2>
+                        <PlusCircleOutlined style={{ fontSize: 30 }} />
+                        <input
+                          style={{ display: "none" }}
+                          type="file"
+                          accept="image/png, image/jpg, image/jpeg, image/gif"
+                          onChange={handleChangeImage}
+                        />
+                        <br />
+                        Thay ảnh
+                      </UploadIcon2>
+                    </>
                   )}
                 </UploadWrapper>
               </Form.Item>
@@ -144,14 +143,6 @@ const ProductEdit = (props: Props) => {
           </Col>
           <Col span={14}>
             <Typography.Title level={5}>Thông tin sản phẩm</Typography.Title>
-            <Form.Item
-              name="image"
-              labelCol={{ span: 24 }}
-              label="Mô tả ngắn"
-              valuePropName="src"
-            >
-              <Image width={200} />
-            </Form.Item>
             <Form.Item
               name="name"
               labelCol={{ span: 24 }}
@@ -218,7 +209,7 @@ const ProductEdit = (props: Props) => {
 
             <Form.Item>
               <Button type="primary" htmlType="submit">
-                Tạo mới sản phẩm
+                Cập nhật sản phẩm
               </Button>
             </Form.Item>
           </Col>

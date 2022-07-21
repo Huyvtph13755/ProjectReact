@@ -1,4 +1,4 @@
-import { Table, Space, Switch, Image, Button } from "antd";
+import { Table, Space, Switch, Image, Button, message } from "antd";
 import {
   CheckOutlined,
   CloseOutlined,
@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TitleAdmin from "../../components/TitleAdmin/TitleAdmin";
 import styled from "styled-components";
-import { deleteProduct, getAll } from "../../api/product";
+import { deleteProduct, getAll, update, updateStt } from "../../api/product";
 import { useQuery } from "react-query";
 import { getAllCate } from "../../api/category";
 import { ProductType } from "../../types/product";
@@ -38,58 +38,74 @@ const Product: React.FC = () => {
   // const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAll();
-      const cate = await getAllCate();
-      const dataT = data.data;
-      const dataC = cate.data;
-      for (let i = 0; i < dataT.length; i++) {
-        for (let j = 0; j < dataC.length; j++) {
-          if (dataT[i].category === dataC[j]._id) {
-            dataT[i].category = dataC[j].name;
-          }
-        }
-      }
-      setDataTable(dataT);
+      const { data } = await getAll();
+      setDataTable(data);
     };
+    const fetchCate = async () => {
+      const { data } = await getAllCate();
+      setCate(data);
+    };
+    fetchCate();
     fetchData();
   }, []);
   console.log(dataTable);
+  console.log(cate);
+  const data = dataTable.map((item, index) => {
+    return {
+      key: index + 1,
+      status: item.status,
+      _id: item._id,
+      name: item.name,
+      originalPrice: item.originalPrice,
+      saleOffPrice: item.saleOffPrice,
+      image: item.image,
+      feature: item.feature,
+      category: item.category,
+    };
+  });
   const columns: any = [
     {
       title: "Ảnh",
-      key:"image",
+      key: "image",
       dataIndex: "image",
-      render: (text:string) => <Image src={text} />,
+      render: (text: string) => <Image width={100} src={text} />,
     },
     {
       title: "Tên sản phẩm",
       dataIndex: "name",
-      key:"name"
+      key: "name",
     },
     {
       title: "Giá niêm yết (đồng)",
       dataIndex: "originalPrice",
-      key: "originalPrice"
+      key: "originalPrice",
     },
     {
       title: "Danh mục",
       dataIndex: "category",
-      key: "category"
+      key: "category",
+      render: (text: string) => {
+        let name;
+        cate.map((item) => {
+          if (item._id == text) {
+            name = item.name;
+          }
+        });
+        return <span>{name}</span>;
+      },
     },
     {
       title: "Ẩn/Hiện",
       key: "status",
       dataIndex: "status",
       render: (text: number, record: any) => {
-        console.log(text);
-        
         return (
-          <>
-          <p>{text}</p>
           <Switch
             defaultChecked={text == 1 ? true : false}
+            onChange={() => {
+              onChange(text == 0 ? false : true, record._id);
+            }}
           />
-          </>
         );
       },
     },
@@ -97,7 +113,7 @@ const Product: React.FC = () => {
       title: "Thao tác",
       key: "action",
       dataIndex: "_id",
-      render: (text:string) => (
+      render: (text: string) => (
         <Space size="middle">
           <Link to={`/admin/product/edit/${text}`}>
             <EditOutlined />
@@ -105,11 +121,16 @@ const Product: React.FC = () => {
           <Button
             style={{ border: "none" }}
             onClick={async () => {
-              const { data } = await deleteProduct(text);
+              const confirm = window.confirm(
+                "Bạn có chắc chắn muốn xóa không?"
+              );
+              if (confirm) {
+                const { data } = await deleteProduct(text);
               data &&
-                setDataTable(
-                  dataTable.filter((item) => item._id !== text)
-                );
+                setDataTable(dataTable.filter((item) => item._id !== text));
+                message.success("Xóa thành công")
+              }
+              
             }}
           >
             <DeleteOutlined />
@@ -118,11 +139,13 @@ const Product: React.FC = () => {
       ),
     },
   ];
-  const onChange = (checked: boolean) => {
-    console.log(`switch to ${checked}`);
+  const onChange = async (checked: boolean, _id: string) => {
+    console.log(_id);
+    const status = checked ? 0 : 1;
+    const { data } = await updateStt({ status: status }, _id);
+    setDataTable(dataTable.map((item) => (item._id == _id ? data : item)));
+    message.success("Đổi trạng thái thành công");
   };
-  
-  
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -130,14 +153,14 @@ const Product: React.FC = () => {
   return (
     <div>
       <Top>
-        <TitleAdmin name={"Huy"} />
-        <Link className="text-3xl" to="/admin/product/add">
+        <TitleAdmin name={"Sản phẩm"} />
+        <Link className="text-4xl" to="/admin/product/add">
           <PlusSquareOutlined />
         </Link>
       </Top>
       <Table
         /*rowSelection={rowSelection}*/ columns={columns}
-        dataSource={dataTable}
+        dataSource={data}
       />
     </div>
   );
@@ -147,6 +170,5 @@ const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-right: 150px;
 `;
 export default Product;

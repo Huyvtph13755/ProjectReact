@@ -38,7 +38,7 @@ const ProductAdd = (props: Props) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      uploadImage(reader.result);
+      uploadImage(reader.result as string);
     };
   };
 
@@ -63,13 +63,11 @@ const ProductAdd = (props: Props) => {
     try {
       const data = await createProduct(values);
       message.success("Tạo mới thành công");
-      // navigate("/admin/product");
+      navigate("/admin");
     } catch (err) {
       message.error("Có lỗi xảy ra");
     }
   };
-  console.log(cate);
-
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
