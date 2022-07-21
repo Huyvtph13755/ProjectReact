@@ -32,6 +32,28 @@ interface DataType {
 }
 
 const Product: React.FC = () => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [dataTable, setDataTable] = useState<ProductType[]>([]);
+  const [cate, setCate] = useState<CategoryType[]>([]);
+  // const [isLoading, setIsLoading] = useState(false)
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAll();
+      const cate = await getAllCate();
+      const dataT = data.data;
+      const dataC = cate.data;
+      for (let i = 0; i < dataT.length; i++) {
+        for (let j = 0; j < dataC.length; j++) {
+          if (dataT[i].category === dataC[j]._id) {
+            dataT[i].category = dataC[j].name;
+          }
+        }
+      }
+      setDataTable(dataT);
+    };
+    fetchData();
+  }, []);
+  console.log(dataTable);
   const columns: ColumnsType<DataType> = [
     {
       title: "Ảnh",
@@ -65,7 +87,7 @@ const Product: React.FC = () => {
           <>
           <p>{text}</p>
           <Switch
-            defaultChecked={text == 0 ? true : false}
+            defaultChecked={text == 1 ? true : false}
           />
           </>
         );
@@ -99,27 +121,8 @@ const Product: React.FC = () => {
   const onChange = (checked: boolean) => {
     console.log(`switch to ${checked}`);
   };
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [dataTable, setDataTable] = useState<ProductType[]>([]);
-  const [cate, setCate] = useState<CategoryType[]>([]);
-  // const [isLoading, setIsLoading] = useState(false)
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAll();
-      const cate = await getAllCate();
-      const dataT = data.data;
-      const dataC = cate.data;
-      for (let i = 0; i < dataT.length; i++) {
-        for (let j = 0; j < dataC.length; j++) {
-          if (dataT[i].category === dataC[j]._id) {
-            dataT[i].category = dataC[j].name;
-          }
-        }
-      }
-      setDataTable(dataT);
-    };
-    fetchData();
-  }, []);
+  
+  
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
