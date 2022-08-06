@@ -5,16 +5,16 @@ import { useNavigate } from "react-router-dom";
 import Img2 from "../../assets/images/logo.png";
 import FaceboookT from "../../assets/images/Rectangle.png";
 import Google from "../../assets/images/Rectangle (1).png";
-import { signin } from "../../api/auth";
+import { signup } from "../../api/auth";
 import { authenticate } from "../../utils/localStorage";
 
-const Signin: React.FC = () => {
+const Signup: React.FC = () => {
   const navigate = useNavigate();
   const onFinish = async (values: any) => {
     try {
-      const {data: user} = await signin(values);
-      message.success("Đăng nhập thành công");
-      authenticate(user, () => navigate('/'))
+      const {data: user} = await signup(values);
+      message.success("Đăng ký thành công");
+      navigate('/signin')
     } catch (err) {
       message.error("Có lỗi xảy ra");
     }
@@ -36,7 +36,7 @@ const Signin: React.FC = () => {
               layout="vertical"
             >
               <Typography.Title level={2} style={{ margin: 0 }}>
-                Đăng nhập
+                Đăng ký
               </Typography.Title>
               <Row>
                 <Col>
@@ -46,6 +46,16 @@ const Signin: React.FC = () => {
                     label="Email"
                     rules={[
                       { required: true, type: 'email', message: "Email không hợp lệ" },
+                    ]}
+                  >
+                    <Input size="large" style={{ width: "300px" }} />
+                  </Form.Item>
+                  <Form.Item
+                    name="phone"
+                    labelCol={{ span: 24 }}
+                    label="Số điện thoại"
+                    rules={[
+                      { required: true, message: "Số điện thoại không được trống" },
                     ]}
                   >
                     <Input size="large" style={{ width: "300px" }} />
@@ -69,7 +79,7 @@ const Signin: React.FC = () => {
                       htmlType="submit"
                       style={{ width: "300px", height: '40px' , backgroundColor: '#FF424E'}}
                     >
-                      Đăng nhập
+                      Đăng ký
                     </Button>
                   </Form.Item>
                   <ContainerT>
@@ -141,4 +151,4 @@ const Img = styled.img`
   padding-bottom: 70px;
 `;
 
-export default Signin;
+export default Signup;

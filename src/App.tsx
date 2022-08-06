@@ -13,12 +13,14 @@ import ProductAdd from "./pages/Admin/Add/ProductAdd";
 import ProductEdit from "./pages/Admin/Update/ProductEdit";
 import CategoryAdd from "./pages/Admin/Add/CategoryAdd";
 import CategoryEdit from "./pages/Admin/Update/CategoryEdit";
+import Signup from "./pages/Auth/Signup";
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <Routes>
       <Route path="/signin" element={<Signin/>}/>
+      <Route path="/signup" element={<Signup/>}/>
       <Route path="/" element={<HomeOverView />}>
         <Route index element={<Home />} />
       </Route>
