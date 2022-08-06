@@ -11,6 +11,8 @@ import Category from "./pages/Admin/Category";
 import Signin from "./pages/Auth/Signin";
 import ProductAdd from "./pages/Admin/Add/ProductAdd";
 import ProductEdit from "./pages/Admin/Update/ProductEdit";
+import CategoryAdd from "./pages/Admin/Add/CategoryAdd";
+import CategoryEdit from "./pages/Admin/Update/CategoryEdit";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -25,6 +27,8 @@ function App() {
         <Route path="category" element={<Category/>}/>
         <Route path="product/add" element={<ProductAdd/>}/>
         <Route path="product/edit/:_id" element={<ProductEdit/>}/>
+        <Route path="category/add" element={<CategoryAdd/>}/>
+        <Route path="category/edit/:_id" element={<CategoryEdit/>}/>
       </Route>
     </Routes>
   );

@@ -63,7 +63,7 @@ const ProductAdd = (props: Props) => {
     try {
       const data = await createProduct(values);
       message.success("Tạo mới thành công");
-      navigate("/admin");
+      // navigate("/admin");
     } catch (err) {
       message.error("Có lỗi xảy ra");
     }

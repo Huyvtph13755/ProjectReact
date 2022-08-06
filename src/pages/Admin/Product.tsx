@@ -1,22 +1,19 @@
-import { Table, Space, Switch, Image, Button, message } from "antd";
+import { Table, Space, Switch, Image, Button, message, Input } from "antd";
 import {
-  CheckOutlined,
-  CloseOutlined,
   EditOutlined,
   DeleteOutlined,
   PlusSquareOutlined,
+  SearchOutlined
 } from "@ant-design/icons";
-import type { ColumnsType } from "antd/es/table";
-import type { TableRowSelection } from "antd/es/table/interface";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TitleAdmin from "../../components/TitleAdmin/TitleAdmin";
 import styled from "styled-components";
 import { deleteProduct, getAll, update, updateStt } from "../../api/product";
-import { useQuery } from "react-query";
 import { getAllCate } from "../../api/category";
 import { ProductType } from "../../types/product";
 import { CategoryType } from "../../types/category";
+import type { ColumnsType, TableProps } from 'antd/es/table';
 interface DataType {
   status: number;
   _id: string;
@@ -30,11 +27,18 @@ interface DataType {
   updatedAt: Date;
   __v: number;
 }
-
+interface FilterDropdownProps {
+  prefixCls: string;
+  setSelectedKeys: (selectedKeys: string[]) => void;
+  selectedKeys: string[];
+  confirm: (closeDropdown?: any) => void;
+  clearFilters: () => void;
+}
 const Product: React.FC = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [dataTable, setDataTable] = useState<ProductType[]>([]);
   const [cate, setCate] = useState<CategoryType[]>([]);
+
+
   // const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
@@ -48,8 +52,12 @@ const Product: React.FC = () => {
     fetchCate();
     fetchData();
   }, []);
-  console.log(dataTable);
-  console.log(cate);
+  let filters = cate.map((item) => {
+    return {
+      text: item.name,
+      value: item._id
+    }
+  });
   const data = dataTable.map((item, index) => {
     return {
       key: index + 1,
@@ -74,6 +82,54 @@ const Product: React.FC = () => {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }: FilterDropdownProps) => {
+        return (
+          <div style={{ padding: "10px" }}>
+            <Input
+              autoFocus
+              placeholder="Nhập tên sản phẩm"
+              value={selectedKeys[0]}
+              onChange={(e) => {
+                setSelectedKeys(e.target.value ? [e.target.value] : []);
+                confirm({ closeDropdown: false });
+              }}
+              onPressEnter={() => {
+                confirm();
+              }}
+            ></Input>
+            <Space style={{ marginTop: "20px" }}>
+              <Button
+                onClick={() => {
+                  confirm();
+                }}
+                type="primary"
+              >
+                Oke
+              </Button>
+
+              <Button
+                onClick={() => {
+                  clearFilters();
+                }}
+                type="dashed"
+              >
+                Reset
+              </Button>
+            </Space>
+          </div>
+        );
+      },
+      onFilter: (value: any, record: any) => {
+        return record.name.toLowerCase().includes(value.toLowerCase());
+      },
+      filterIcon: () => {
+        return <SearchOutlined />;
+      },
     },
     {
       title: "Giá niêm yết (đồng)",
@@ -84,6 +140,8 @@ const Product: React.FC = () => {
       title: "Danh mục",
       dataIndex: "category",
       key: "category",
+      filters: filters,
+      onFilter: (value: string, record: any) => record.category.indexOf(value) === 0,
       render: (text: string) => {
         let name;
         cate.map((item) => {
@@ -101,9 +159,9 @@ const Product: React.FC = () => {
       render: (text: number, record: any) => {
         return (
           <Switch
-            defaultChecked={text == 1 ? true : false}
+            defaultChecked={text == 0 ? true : false}
             onChange={() => {
-              onChange(text == 0 ? false : true, record._id);
+              onChangeStt(text == 0 ? false : true, record._id);
             }}
           />
         );
@@ -139,16 +197,15 @@ const Product: React.FC = () => {
       ),
     },
   ];
-  const onChange = async (checked: boolean, _id: string) => {
+  const onChangeStt = async (checked: boolean, _id: string) => {
     console.log(_id);
     const status = checked ? 0 : 1;
     const { data } = await updateStt({ status: status }, _id);
     setDataTable(dataTable.map((item) => (item._id == _id ? data : item)));
     message.success("Đổi trạng thái thành công");
   };
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
+  const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
   };
   return (
     <div>

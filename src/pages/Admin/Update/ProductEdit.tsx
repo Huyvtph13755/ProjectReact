@@ -32,7 +32,7 @@ const ProductEdit = (props: Props) => {
     const getProduct = async () => {
       const { data } = await read(_id as string);
       form.setFieldsValue(data);
-      console.log(data);
+
     };
     getProduct();
     const getCates = async () => {
@@ -75,7 +75,6 @@ const ProductEdit = (props: Props) => {
     if (values.image2) {
       product.image = uploadedImage;
     }
-    console.log(product);
 
     try {
       const data = await update(product);
