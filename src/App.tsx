@@ -3,7 +3,6 @@ import logo from "./logo.svg";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import HomeOverView from "./layouts/HomeOverView/HomeOverView";
-import Home from "./pages/Client/Home";
 import HeaderPage from './components/Header/Header'
 import AdminOverView from "./layouts/AdminOverView/AdminOverView";
 import Product from "./pages/Admin/Product";
@@ -14,17 +13,23 @@ import ProductEdit from "./pages/Admin/Update/ProductEdit";
 import CategoryAdd from "./pages/Admin/Add/CategoryAdd";
 import CategoryEdit from "./pages/Admin/Update/CategoryEdit";
 import Signup from "./pages/Auth/Signup";
+import PrivateRouter from "./utils/PrivateRoute";
+import CheckSignin from "./utils/checkSigin";
+
+import ProductPage from "./components/ProductPage";
+import PagePro from "./pages/Client/PagePro";
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <Routes>
-      <Route path="/signin" element={<Signin/>}/>
-      <Route path="/signup" element={<Signup/>}/>
+      <Route path="/signin" element={<CheckSignin><Signin/></CheckSignin>}/>
+      <Route path="/signup" element={<CheckSignin><Signup/></CheckSignin>}/>
       <Route path="/" element={<HomeOverView />}>
-        <Route index element={<Home />} />
+        <Route index element={<PagePro />} />
+        <Route path="/:_id" element={<PagePro/>}/>
       </Route>
-      <Route path="/admin" element={<AdminOverView/>}>
+      <Route path="/admin" element={<PrivateRouter><AdminOverView/></PrivateRouter>}>
         <Route index element={<Product/>}/>
         <Route path="category" element={<Category/>}/>
         <Route path="product/add" element={<ProductAdd/>}/>

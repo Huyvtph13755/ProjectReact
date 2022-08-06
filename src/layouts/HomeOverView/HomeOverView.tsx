@@ -9,8 +9,6 @@ const HomeOverView = (props: Props) => {
   return (
     <div>
       <HeaderPage/>
-      <Banner/>
-      <br /><br /><br />
       <Outlet/>
       <br /><br /><br />
       <FooterPage/>

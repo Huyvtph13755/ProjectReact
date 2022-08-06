@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { getNew } from "../api/product";
+import { useParams } from "react-router-dom";
+import { getAllCate, getProInCate } from "../api/category";
+import { getAll, getNew } from "../api/product";
 import { ProductType } from "../types/product";
 
 type Props = {};
 
-const Featured = (props: Props) => {
+const ProductPage = (props: Props) => {
   const [data, setData] = useState<ProductType[]>([]);
+  const {_id} = useParams()
   useEffect(() => {
     const fetchData = async () => {
-      let { data } = await getNew();
-      let newData = data.filter((item: any) => item.status == 0);
+      const { data } = await getProInCate(_id as string);
+      const newData = data.products.filter((item: any) => item.status == 0);
       setData(newData);  
     };
-    fetchData();
-  }, []);
-
+    const fetchAll = async () => {
+        let { data } = await getAll();
+        let newData = data.filter((item: any) => item.status == 0);
+        setData(newData);  
+      };
+      _id == undefined ? fetchAll() : fetchData()
+  }, [_id]);
   return (
     <div className="bg-white">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-6 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">
-          Sản phẩm nổi bật
+          Sản phẩm
         </h2>
-
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-4 lg:grid-cols-7 xl:gap-x-8">
           {data &&
             data.map((item: any, index: any) => {
@@ -73,4 +79,4 @@ const Featured = (props: Props) => {
   );
 };
 
-export default Featured;
+export default ProductPage;

@@ -5,7 +5,10 @@ export const getAllCate = () => {
     const url = "/category"
     return instance.get(url)
 }
-
+export const getProInCate = (_id:string) => {
+    const url = `/categoryDetail/${_id}`
+    return instance.get(url)
+}
 export const createCategory = (data:any) => {
     const url = "/category"
     return instance.post(url, data)
