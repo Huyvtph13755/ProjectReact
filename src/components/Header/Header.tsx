@@ -17,13 +17,13 @@ const Header = (props: Props) => {
   const a = JSON.parse(localStorage.getItem("user") as string);
   const handleClick = (event: React.MouseEvent<HTMLElement>, text: string) => {
     localStorage.removeItem("user");
-    // window.location.reload();
+    window.location.reload();
   };
   return (
     <Wrapper>
       <Container>
         <div>
-          <Image src={LogoImage} />
+          <Link to={`/`}><Image src={LogoImage} /></Link>
         </div>
         <div className={s.content_btn}>
           {/* <Seach className={s.input}  > */}
@@ -57,7 +57,7 @@ const Header = (props: Props) => {
           <div>
             <Image2 src={ImageLogo3} />
           </div>
-          <div>Giỏ hàng</div>
+          <Link className="text-white" to={`/cart`}>Giỏ hàng</Link>
         </Vitri>
 
         {a == null ? (<div>

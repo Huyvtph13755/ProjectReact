@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getAllCate, getProInCate } from "../api/category";
 import { getAll, getNew } from "../api/product";
 import { ProductType } from "../types/product";
@@ -45,17 +45,17 @@ const ProductPage = (props: Props) => {
                   </div>
                   <div className="mt-4 flex justify-between">
                     <div>
-                      <h3 className="text-sm text-gray-700">
-                        <a href="#" className="text-red-700 font-bold">
+                      <h3 className="text-xs text-gray-700">
+                        <Link to={`/product/${item._id}`} className="text-red-700 font-bold">
                           <span
                             aria-hidden="true"
                             className="absolute inset-0"
                           ></span>
-                          {item.originalPrice - item.saleOffPrice} <u className="text-xs">đ</u>
-                        </a>
+                          {(item.originalPrice - item.saleOffPrice).toLocaleString()} <u className="text-xs">đ</u>
+                        </Link>
                       </h3>
                     </div>
-                    <p className="text-sm text-gray-400">{item.originalPrice} <u className="text-xs">đ</u></p>
+                    <p className="text-xs text-gray-400">{(item.originalPrice).toLocaleString()} <u className="text-xs">đ</u></p>
                   </div>
                   <p className="mt-1 bg-gray-100 p-1.5 text-xs text-gray-700">[HOT] Thu cũ lên đời giá cao - Thủ tục nhanh - Trợ giá lên tới 1.000.000đ</p>
                     <div className="flex justify-between">

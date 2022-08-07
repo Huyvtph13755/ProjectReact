@@ -40,3 +40,28 @@
 button {
   font-size: calc(10px + 2vmin);
 }
+
+.click-1, .click-2{
+  padding: 1px;
+  background-color: white;
+  width: 30px;
+  border-radius: 0;
+  border: 1px solid #c0c0c0;
+  font-weight: bold;
+}
+.click-1{
+  border-right: none;
+}
+.click-2{
+  border-left: none;
+}
+.cart-item input{
+  border: 1px solid #c0c0c0;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  width: 50px;
+  padding: 1px 10px;
+
+}
+

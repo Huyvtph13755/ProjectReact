@@ -1,4 +1,4 @@
-import { PhoneOutlined, LaptopOutlined, TabletFilled, AudioOutlined, SettingOutlined } from '@ant-design/icons';
+import { TabletOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu } from 'antd';
 import React from 'react';
@@ -10,19 +10,16 @@ import LogoImage from '../../assets/images/logo.png'
 const { Header, Content, Sider } = Layout;
 
 const item3: MenuProps['items'] = [
-    {key: "cellphone", icon: <PhoneOutlined />, label: <Link to="/admin">Điện thoại</Link>},
-    {key: "laptop", icon: <LaptopOutlined />, label: "Laptop"},
-    {key: "tablet", icon: <TabletFilled />, label: "Máy tính bảng"},
-    {key: "audio", icon: <AudioOutlined />, label: "Âm thanh"},
-    {key: "categories", icon: <SettingOutlined />,
-     label: <Link to="/admin/category">Categories</Link>
+    {key: "cellphone", icon: <TabletOutlined />, label: <Link to="/admin">Sản phẩm</Link>},
+    {key: "categories", icon: <UnorderedListOutlined />,
+     label: <Link to="/admin/category">Danh mục</Link>
     },
 ]
 
 const AdminOverView: React.FC = () => (
   <Layout>
     <HeaderCustom>
-      <Logo src={LogoImage}/>
+      <Link to={`/`}><Logo src={LogoImage}/></Link>
       {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} /> */}
     </HeaderCustom>
     <Layout>

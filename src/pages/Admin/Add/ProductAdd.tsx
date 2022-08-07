@@ -63,7 +63,7 @@ const ProductAdd = (props: Props) => {
     try {
       const data = await createProduct(values);
       message.success("Tạo mới thành công");
-      // navigate("/admin");
+      navigate("/admin");
     } catch (err) {
       message.error("Có lỗi xảy ra");
     }
@@ -151,6 +151,21 @@ const ProductAdd = (props: Props) => {
                   name="saleOffPrice"
                   label="Giá giảm"
                   labelCol={{ span: 24 }}
+                  rules={[
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (
+                          !value ||
+                          Number(getFieldValue("originalPrice")) <= Number(value)
+                        ) {
+                          return Promise.reject(
+                            new Error("Giá khuyến mại phải nhỏ hơn giá gốc")
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    }),
+                  ]}
                 >
                   <InputNumber style={{ width: "100%" }} size="large" />
                 </Form.Item>
