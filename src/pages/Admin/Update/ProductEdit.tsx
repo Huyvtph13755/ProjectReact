@@ -19,6 +19,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { getAllCate } from "../../../api/category";
 import { CategoryType } from "../../../types/category";
 import { ProductType, ProductUpdateType } from "../../../types/product";
+import TextEditor from "../../../components/TextEditor";
 const { TextArea } = Input;
 const { Option } = Select;
 type Props = {};
@@ -211,14 +212,14 @@ const ProductEdit = (props: Props) => {
               labelCol={{ span: 24 }}
               label="Đặc điểm nổi bật"
             >
-              <TextArea name="feature" />
+              <TextEditor/>
             </Form.Item>
             <Form.Item
               name="description"
               labelCol={{ span: 24 }}
               label="Mô tả sản phẩm"
             >
-              <TextArea name="description" rows={8} />
+               <TextEditor/>
             </Form.Item>
 
             <Form.Item>

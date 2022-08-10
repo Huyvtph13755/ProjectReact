@@ -9,6 +9,7 @@ import ImageLogo2 from "../../assets/images/oto.png";
 import ImageLogo3 from "../../assets/images/cart.png";
 import { SearchOutlined } from "@ant-design/icons";
 import { Link, NavLink } from "react-router-dom";
+import { message } from "antd";
 
 // import SeachI from '../Dassboard/SeachI'
 type Props = {};
@@ -17,6 +18,7 @@ const Header = (props: Props) => {
   const a = JSON.parse(localStorage.getItem("user") as string);
   const handleClick = (event: React.MouseEvent<HTMLElement>, text: string) => {
     localStorage.removeItem("user");
+    message.success("Đăng xuất thành công")
     window.location.reload();
   };
   return (

@@ -20,6 +20,7 @@ import ProductPage from "./components/ProductPage";
 import PagePro from "./pages/Client/PagePro";
 import ProductDetail from "./pages/Client/ProductDetail";
 import Cart from "./pages/Client/Cart";
+import PostCreate from "./components/test";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -28,6 +29,7 @@ function App() {
       <Route path="/signin" element={<CheckSignin><Signin/></CheckSignin>}/>
       <Route path="/signup" element={<CheckSignin><Signup/></CheckSignin>}/>
       <Route path="/cart" element={<Cart/>}/>
+      <Route path="/test" element={<PostCreate/>}/>
       <Route path="/" element={<HomeOverView />}>
         <Route index element={<PagePro />} />
         <Route path="/:_id" element={<PagePro/>}/>

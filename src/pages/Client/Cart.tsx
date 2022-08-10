@@ -21,8 +21,8 @@ const Cart = () => {
       <div className="flex-1 overflow-y-auto py-6 px-4 sm:px-6">
         <div className="flex items-center justify-start">
           <Link to={`/`} className="flex items-center">
-            <LeftOutlined />
-            <p className="pt-2.5">Trở về</p>
+            <LeftOutlined className="text-black" />
+            <p className="pt-2.5 text-black">Trở về</p>
           </Link>
           <h2
             className="text-lg font-medium text-gray-900 ml-32"
@@ -105,12 +105,12 @@ const Cart = () => {
           </a>
         </div>
         <div className="mt-2">
-          <a
-            href="#"
+          <Link
+            to={`/`}
             className="flex items-center justify-center rounded-md border border-transparent bg-neutral-50 px-6 py-3 text-sm text-red-600 shadow-sm hover:bg-neutral-100"
           >
             CHỌN THÊM SẢN PHẨM KHÁC
-          </a>
+          </Link>
         </div>
       </div>
     </div>

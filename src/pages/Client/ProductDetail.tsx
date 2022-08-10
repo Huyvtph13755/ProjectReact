@@ -48,7 +48,8 @@ const ProductDetail = (props: Props) => {
     });
     message.success("Thêm vào giỏ hàng thành công!");
   };
-
+  console.log(product.description);
+  
   return (
     <Container>
       <div>
@@ -212,12 +213,12 @@ const ProductDetail = (props: Props) => {
         <Items3>
           <NameDD>Đặc điểm nổi bật</NameDD>
           <div>
-            <SpanN>{product.feature}</SpanN>{" "}
+            <SpanN dangerouslySetInnerHTML={{__html: product.feature}}></SpanN>
           </div>
         </Items3>
       </div>
       {/* docs */}
-      <div>{product.description}</div>
+      <p dangerouslySetInnerHTML={{__html: product.description}}/>
     </Container>
   );
 };

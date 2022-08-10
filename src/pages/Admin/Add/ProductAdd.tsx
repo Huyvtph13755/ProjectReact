@@ -10,13 +10,18 @@ import {
   InputNumber,
   Select,
   message,
+  notification,
+  Card,
 } from "antd";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../../api/product";
 import { upload } from "../../../api/image";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { getAllCate } from "../../../api/category";
 import { CategoryType } from "../../../types/category";
+import TextEditor from "../../../components/TextEditor";
 const { TextArea } = Input;
 const { Option } = Select;
 type Props = {};
@@ -156,7 +161,8 @@ const ProductAdd = (props: Props) => {
                       validator(_, value) {
                         if (
                           !value ||
-                          Number(getFieldValue("originalPrice")) <= Number(value)
+                          Number(getFieldValue("originalPrice")) <=
+                          Number(value)
                         ) {
                           return Promise.reject(
                             new Error("Giá khuyến mại phải nhỏ hơn giá gốc")
@@ -187,16 +193,15 @@ const ProductAdd = (props: Props) => {
               labelCol={{ span: 24 }}
               label="Đặc điểm nổi bật"
             >
-              <TextArea name="feature" />
+              <TextEditor/>
             </Form.Item>
             <Form.Item
               name="description"
               labelCol={{ span: 24 }}
               label="Mô tả sản phẩm"
             >
-              <TextArea name="description" rows={8} />
+                <TextEditor/>
             </Form.Item>
-
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 Tạo mới sản phẩm
