@@ -1,4 +1,4 @@
-import { Table, Space, Switch, Image, Button, message, Input } from "antd";
+import { Table, Space, Switch, Image, Button, message, Input, Select } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -6,11 +6,11 @@ import {
   SearchOutlined
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import TitleAdmin from "../../components/TitleAdmin/TitleAdmin";
 import styled from "styled-components";
 import { deleteProduct, getAll, update, updateStt } from "../../api/product";
-import { getAllCate } from "../../api/category";
+import { getAllCate, getProInCate } from "../../api/category";
 import { ProductType } from "../../types/product";
 import { CategoryType } from "../../types/category";
 import type { ColumnsType, TableProps } from 'antd/es/table';
@@ -35,23 +35,30 @@ interface FilterDropdownProps {
   clearFilters: () => void;
 }
 const Product: React.FC = () => {
+  const { Option } = Select;
   const [dataTable, setDataTable] = useState<ProductType[]>([]);
   const [cate, setCate] = useState<CategoryType[]>([]);
-
-
-  // const [isLoading, setIsLoading] = useState(false)
+  const {_id} = useParams();
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await getAll();
       setDataTable(data);
     };
+    const fetchDataInCate = async () => {
+      const { data } = await getProInCate(_id as string);
+      setDataTable(data.products)
+    } 
     const fetchCate = async () => {
       const { data } = await getAllCate();
       setCate(data);
     };
     fetchCate();
-    fetchData();
-  }, []);
+    if(_id){
+      fetchDataInCate()
+    }else{
+      fetchData();
+    }
+  }, [_id]);
   let filters = cate.map((item) => {
     return {
       text: item.name,
@@ -59,6 +66,19 @@ const Product: React.FC = () => {
     }
   });
   const data = dataTable.map((item, index) => {
+   if(_id){
+    return {
+      key: index + 1,
+      status: item.status,
+      _id: item._id,
+      name: item.name,
+      originalPrice: item.originalPrice,
+      saleOffPrice: item.saleOffPrice,
+      image: item.image,
+      feature: item.feature,
+      category: _id,
+    };
+   }else{
     return {
       key: index + 1,
       status: item.status,
@@ -70,6 +90,7 @@ const Product: React.FC = () => {
       feature: item.feature,
       category: item.category,
     };
+   }
   });
   const columns: any = [
     {
@@ -184,11 +205,11 @@ const Product: React.FC = () => {
               );
               if (confirm) {
                 const { data } = await deleteProduct(text);
-              data &&
-                setDataTable(dataTable.filter((item) => item._id !== text));
+                data &&
+                  setDataTable(dataTable.filter((item) => item._id !== text));
                 message.success("Xóa thành công")
               }
-              
+
             }}
           >
             <DeleteOutlined />
@@ -215,6 +236,15 @@ const Product: React.FC = () => {
           <PlusSquareOutlined />
         </Link>
       </Top>
+      <Opt>
+        <Select defaultValue="0" style={{ width: "15%" }} size="large">
+          <Option value="0"><Link to={`/admin`}>Tất cả sản phẩm</Link></Option>
+          {cate &&
+                      cate.map((item: any) => {
+                        return <Option value={item._id}><Link to={`/admin/product/sort/${item._id}`}>{item.name}</Link></Option>;
+                      })}
+        </Select>
+      </Opt>
       <Table
         /*rowSelection={rowSelection}*/ columns={columns}
         dataSource={data}
@@ -228,4 +258,7 @@ const Top = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+const Opt = styled.div`
+  margin: 10px 0;
+`
 export default Product;
